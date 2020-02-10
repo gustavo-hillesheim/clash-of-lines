@@ -1,5 +1,6 @@
 const { Worker } = require('worker_threads');
-const { setupCommands, executeCommand } = require('./commands');
+const { reduce } = require('./game-state/game-state');
+const { executeCommand } = require('./commands');
 const { setupServerSocket } = require('./server-socket');
 
 function startGameLoop() {
@@ -7,11 +8,11 @@ function startGameLoop() {
 }
 
 const worker = startGameLoop();
-setupCommands(worker);
+worker.on('message', reduce);
 const serverSocket = setupServerSocket(8912);
 
 serverSocket.on('connection', socket => {
     socket.on('command', command => {
-        executeCommand(command, socket);
+        executeCommand(command, socket, worker);
     });
 });
