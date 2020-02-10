@@ -1,5 +1,6 @@
 class Mine {
 
+    static description = 'Increases gold production by 1.';
     quantity = 1;
     goldProduced = 1;
 
@@ -7,23 +8,23 @@ class Mine {
         gameState.resources.gold += this.quantity * this.goldProduced;
     }
 }
+const buildings = new Map();
+buildings.set('mine', Mine);
 
-const buildings = {
-    mine: {
-        class: Mine,
-        description: 'A mine'
+function build(action, gameState) {
+    const { building } = action;
+    if (!buildings.has(building)) {
+        return false;
+    }
+    const buildInGame = !!gameState.buildings[building];
+    if (buildInGame) {
+        buildInGame.quantity++;
+        return { quantity: buildInGame.quantity };
+    } else {
+        const buildingClass = buildings.get(building);
+        gameState.buildings[building] = new buildingClass();
+        return { quantity: 1 };
     }
 }
 
-function createBuilding(building, gameState) {
-    if (gameState.buildings[building]) {
-        gameState.buildings[building].quantity++;
-        return `Successfully built ${building}! Current quantity: ${gameState.buildings[building].quantity}.`;
-    } else if (buildings[building]) {
-        gameState.buildings[building] = new buildings[building].class();
-        return `Successfully built ${building}! Current quantity: ${gameState.buildings[building].quantity}.`;
-    }
-    return `Unknown build: ${building}.`;
-}
-
-module.exports = { createBuilding };
+module.exports = { build, buildings };

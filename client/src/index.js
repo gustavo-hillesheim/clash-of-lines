@@ -1,28 +1,41 @@
 const io = require('socket.io-client');
-const readLine = require('readline');
+const readline = require('readline');
 
-function readNextCommand(socket) {
-    const rl = readLine.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    rl.question('> ', answer => {
-        socket.emit('command', answer);
-        rl.close();
+async function ask(question) {
+    return new Promise(resolve => {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+        rl.question(`${question} `, answer => {
+            rl.close();
+            resolve(answer);
+        });
     });
 }
 
-function setupSocket(host) {
-    return io(host);
+async function readNextCommand(socket) {
+    const answer = await ask('>');
+    socket.emit('command', answer);
 }
 
-const socket = setupSocket('http://localhost:8912');
-socket.on('command_response', response => {
-    console.log(response);
+function configSocket(socket) {
+    socket.on('command_response', response => {
+        console.log(response);
+        readNextCommand(socket);
+    });
+    socket.on('disconnect_client', () => {
+        socket.disconnect();
+        process.exit();
+    });
     readNextCommand(socket);
-});
-socket.on('disconnect-client', () => {
-    socket.disconnect();
-    process.exit();
-});
-readNextCommand(socket);
+}
+
+async function init() {
+    const server = await ask('Server host:');
+    const player = await ask('Nickname:');
+    const socket = io(server);
+    socket.emit('set_name', player, () => configSocket(socket));
+}
+
+init();

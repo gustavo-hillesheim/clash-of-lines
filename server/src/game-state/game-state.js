@@ -1,4 +1,4 @@
-const { createBuilding } = require('./building');
+const { build } = require('./building');
 
 function newState() {
     return {
@@ -9,22 +9,29 @@ function newState() {
     };
 };
 
-const gameState = newState();
+const gameStates = {};
+
+function createGameState(player) {
+    if (!gameStates[player]) {
+        gameStates[player] = newState();
+    }
+}
 
 function reduce(action) {
+    const gameState = gameStates[action.player];
+    console.log(gameStates, action.player, gameState);
     switch (action.action) {
         case 'setResources': {
             gameState.resources = action.resources;
-            break;
+            return true;
         }
         case 'build': {
-            const { building } = action;
-            return createBuilding(building, gameState);
+            return build(action, gameState);
         }
         default: {
-            return `Unknown action ${action.action}`;
+            throw `Unknown action ${action.action}`;
         }
     }
 }
 
-module.exports = { gameState, reduce };
+module.exports = { gameStates, reduce, createGameState };

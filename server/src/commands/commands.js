@@ -1,5 +1,5 @@
 const minimist = require('minimist');
-const { gameState } = require('../game-state/game-state');
+const { gameStates } = require('../game-state/game-state');
 const { build } = require('./build');
 
 const COMMAND_RESPONSE = 'command_response';
@@ -10,7 +10,7 @@ function registerCommand(command) {
     commands.push(command);
 }
 
-function executeCommand(rawCommand, clientSocket, worker) {
+function executeCommand(rawCommand, clientSocket, worker, player) {
     const arguments = minimist(rawCommand.split(' '));
     const commandName = arguments._.splice(0, 1)[0] || 'help';
     let foundCommand = false;
@@ -18,7 +18,7 @@ function executeCommand(rawCommand, clientSocket, worker) {
         .filter(command => command.name === commandName || (command.alias && command.alias.includes(commandName)))
         .forEach(command => {
             foundCommand = true;
-            const response = command.action({ arguments, clientSocket, worker });
+            const response = command.action({ arguments, clientSocket, worker, player });
             if (response) {
                 clientSocket.emit(COMMAND_RESPONSE, response);
             }
@@ -28,7 +28,7 @@ function executeCommand(rawCommand, clientSocket, worker) {
     }
 }
 
-function showHelp({ clientSocket }) {
+function showHelp() {
     let help = 'Available commands:';
     commands.forEach(command => {
         let commandDescription = command.name;
@@ -57,14 +57,14 @@ function registerCommands() {
     registerCommand({
         name: 'resources',
         help: 'Views your current resources',
-        action: () => `Your current resources are:\n- Gold: ${gameState.resources.gold}`
+        action: ({ player }) => `Your current resources are:\n- Gold: ${gameStates[player].resources.gold}`
     });
     registerCommand({
         name: 'quit',
         alias: ['exit', 'close'],
         help: 'Closes the game',
         action: ({ clientSocket }) => {
-            clientSocket.emit('disconnect-client');
+            clientSocket.emit('disconnect_client');
             return false;
         }
     });
