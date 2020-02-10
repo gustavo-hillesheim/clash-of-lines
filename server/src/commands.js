@@ -55,7 +55,7 @@ module.exports = (function () {
             .command('quit')
             .action(() => {
                 if (clientSocket) {
-                    clientSocket.emit('disconnect');
+                    clientSocket.emit('disconnect-client');
                 }
             });
         commander.on('command:*', () => {

@@ -21,7 +21,7 @@ socket.on('command_response', response => {
     console.log(response);
     readNextCommand(socket);
 });
-socket.on('disconnect', () => {
+socket.on('disconnect-client', () => {
     socket.disconnect();
     process.exit();
 });

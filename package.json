@@ -2,13 +2,9 @@
   "name": "clash-of-lines",
   "version": "1.0.0",
   "description": "A CLI game based upon Clash of Clans",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server/server.js",
-    "server": "node src/server/server.js",
-    "client": "node src/client/client.js",
-    "build": "nexe src/client/client.js --output dist/clash-of-lines.exe"
+    "server": "cd server && npm start",
+    "client": "cd client && npm start"
   },
   "keywords": [
     "cli",
@@ -17,15 +13,7 @@
   ],
   "author": "gustavo-hillesheim",
   "license": "ISC",
-  "devDependencies": {
-    "nexe": "^3.3.2",
-    "pkg": "^4.4.2"
-  },
   "dependencies": {
-    "commander": "^4.1.1",
-    "express": "^4.17.1",
-    "shell-quote": "^1.7.2",
-    "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "shell-quote": "^1.7.2"
   }
 }

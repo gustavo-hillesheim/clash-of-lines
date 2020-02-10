@@ -1,0 +1,18 @@
+{
+  "name": "clash-of-lines-client",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "keywords": [
+    "cli",
+    "game",
+    "clash-of-clans"
+  ],
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "gustavo-hillesheim",
+  "dependencies": {
+    "socket.io-client": "^2.3.0"
+  }
+}
