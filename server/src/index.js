@@ -14,7 +14,9 @@ const serverSocket = setupServerSocket(8912);
 
 serverSocket.on('connection', socket => {
     socket.on('set_name', (player, setupCompleted) => {
-        createGameState(player);
+        const createGameStateAction = { action: 'createGameState', player };
+        reduce(createGameStateAction);
+        worker.postMessage(createGameStateAction);
         setupCompleted();
         socket.on('command', command => {
             executeCommand(command, socket, worker, player);

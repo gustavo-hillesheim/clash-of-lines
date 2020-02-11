@@ -6,7 +6,7 @@ mainThread.on('error', process.exit.bind(process));
 mainThread.on('exit', process.exit.bind(process));
 
 setInterval(() => {
-    Object.values(gameStates)
+    Object.keys(gameStates)
         .forEach(player => {
             const gameState = gameStates[player];
             Object.values(gameState.buildings)

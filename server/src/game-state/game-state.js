@@ -11,16 +11,15 @@ function newState() {
 
 const gameStates = {};
 
-function createGameState(player) {
-    if (!gameStates[player]) {
-        gameStates[player] = newState();
-    }
-}
-
 function reduce(action) {
     const gameState = gameStates[action.player];
-    console.log(gameStates, action.player, gameState);
     switch (action.action) {
+        case 'createGameState': {
+            if (!gameState) {
+                gameStates[action.player] = newState();
+            }
+            return true;
+        }
         case 'setResources': {
             gameState.resources = action.resources;
             return true;
@@ -34,4 +33,4 @@ function reduce(action) {
     }
 }
 
-module.exports = { gameStates, reduce, createGameState };
+module.exports = { gameStates, reduce };

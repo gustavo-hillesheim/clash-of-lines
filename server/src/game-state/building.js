@@ -16,7 +16,7 @@ function build(action, gameState) {
     if (!buildings.has(building)) {
         return false;
     }
-    const buildInGame = !!gameState.buildings[building];
+    const buildInGame = gameState.buildings[building];
     if (buildInGame) {
         buildInGame.quantity++;
         return { quantity: buildInGame.quantity };
