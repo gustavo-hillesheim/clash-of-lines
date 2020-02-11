@@ -3,6 +3,7 @@ class Mine {
     static description = 'Increases gold production by 1.';
     quantity = 1;
     goldProduced = 1;
+    xpPoints = 1;
 
     update(gameState) {
         gameState.resources.gold += this.quantity * this.goldProduced;

@@ -55,6 +55,11 @@ function registerCommands() {
         action: build
     });
     registerCommand({
+        name: 'players',
+        help: 'Show online server players',
+        action: build
+    });
+    registerCommand({
         name: 'resources',
         help: 'Views your current resources',
         action: ({ player }) => `Your current resources are:\n- Gold: ${gameStates[player].resources.gold}`
