@@ -2,13 +2,16 @@ const { reduce } = require('../game-state/game-state');
 const { buildings } = require('../game-state/building');
 const { capitalize } = require('../utils');
 
-function build({ arguments, worker }) {
+function build({ player, arguments, worker }) {
   const building = arguments._[0];
-  return !building || arguments.list || arguments.l ? listBuilding() : createBuild(building, worker);
+  if (arguments.list || arguments.l) {
+    return listBuilding();
+  }
+  return createBuild(building, worker, player);
 }
 
-function createBuild(name, worker) {
-  const action = { action: 'build', building: name.toLowerCase() };
+function createBuild(name, worker, player) {
+  const action = { action: 'build', building: name.toLowerCase(), player };
   worker.postMessage(action);
   const reduceResponse = reduce(action);
   return reduceResponse ? `${capitalize(name)} was built! Current amount: ${reduceResponse.quantity}.` : `Unknown build: ${name}.`;
