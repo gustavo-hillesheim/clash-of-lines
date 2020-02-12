@@ -10,7 +10,7 @@ function registerCommand(command) {
     commands.push(command);
 }
 
-function executeCommand(rawCommand, clientSocket, worker, player) {
+function executeCommand(rawCommand, clientSocket, player) {
     const arguments = minimist(rawCommand.split(' '));
     const commandName = arguments._.splice(0, 1)[0] || 'help';
     let foundCommand = false;
@@ -18,7 +18,7 @@ function executeCommand(rawCommand, clientSocket, worker, player) {
         .filter(command => command.name === commandName || (command.alias && command.alias.includes(commandName)))
         .forEach(command => {
             foundCommand = true;
-            const response = command.action({ arguments, clientSocket, worker, player });
+            const response = command.action({ arguments, clientSocket, player });
             if (response) {
                 clientSocket.emit(COMMAND_RESPONSE, response);
             }

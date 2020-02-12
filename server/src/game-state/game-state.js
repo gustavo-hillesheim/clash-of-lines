@@ -1,4 +1,5 @@
 const { build } = require('./building');
+const { isMainThread } = require('worker_threads');
 
 function newState() {
     return {
@@ -10,8 +11,15 @@ function newState() {
 };
 
 const gameStates = {};
+let reduceWorker;
+function setReduceWorker(worker) {
+    reduceWorker = worker;
+}
 
 function reduce(action) {
+    if (isMainThread && action.action !== 'setResources') {
+        reduceWorker.postMessage(action);
+    }
     const gameState = gameStates[action.player];
     switch (action.action) {
         case 'createGameState': {
@@ -33,4 +41,4 @@ function reduce(action) {
     }
 }
 
-module.exports = { gameStates, reduce };
+module.exports = { gameStates, reduce, setReduceWorker };
